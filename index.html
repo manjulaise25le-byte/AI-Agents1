@@ -1,168 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Mini Travel Agent</title>
+    <title>Mini Autonomous Travel Agent</title>
 
     <style>
 
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            min-height: 100vh;
-            padding: 40px 20px;
+            background: #eaf4ff;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
-            max-width: 800px;
-            margin: auto;
+            width: 750px;
+            margin: 40px auto;
             background: white;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #1565c0;
         }
 
         .subtitle {
             text-align: center;
-            color: #666;
-            margin-bottom: 30px;
+            color: #555;
         }
 
         label {
             display: block;
             margin-top: 15px;
-            margin-bottom: 5px;
             font-weight: bold;
         }
 
         input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #45e0d3;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
             border-radius: 8px;
-            font-size: 16px;
         }
 
         button {
             width: 100%;
             margin-top: 25px;
             padding: 13px;
+            background: #1565c0;
+            color: white;
             border: none;
             border-radius: 8px;
-            background: #1d9531;
-            color: white;
             font-size: 17px;
             cursor: pointer;
         }
 
         button:hover {
-            background: #d67d4d;
+            background: #0d47a1;
         }
 
         .result {
             margin-top: 30px;
             padding: 20px;
-            background: #e6df52;
-            border-radius: 12px;
+            background: #f5f9ff;
+            border-radius: 10px;
         }
 
-        .card {
+        .result h2 {
+            color: #1565c0;
+        }
+
+        .box {
             background: white;
             padding: 15px;
+            margin-top: 12px;
+            border-radius: 8px;
+            border-left: 5px solid #1565c0;
+        }
+
+        .total {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .replan {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 8px;
             margin-top: 15px;
-            border-radius: 10px;
-            border-left: 5px solid #e164e3;
-        }
-
-        .card h3 {
-            margin-top: 0;
-            color: #9aca7a;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        li {
-            margin-bottom: 8px;
         }
 
     </style>
+
 </head>
+
 
 <body>
 
 <div class="container">
 
-    <h1>✈️ Mini Travel Agent</h1>
+    <h1>🧳 Mini Autonomous Travel Agent</h1>
 
     <p class="subtitle">
-        Plan your trip with our simple AI Travel Agent
+        AI Agent for Travel Planning
     </p>
 
 
-    <!-- TRAVEL FORM -->
+    <form action="/plan" method="POST">
 
-    <form method="POST">
-
-        <label for="source">Starting Place</label>
+        <label>From:</label>
 
         <input
             type="text"
-            id="source"
             name="source"
             placeholder="Example: Bangalore"
             required
         >
 
 
-        <label for="destination">Destination</label>
+        <label>Destination:</label>
 
         <input
             type="text"
-            id="destination"
             name="destination"
             placeholder="Example: Goa"
             required
         >
 
 
-        <label for="days">Number of Days</label>
+        <label>Number of Days:</label>
 
         <input
             type="number"
-            id="days"
             name="days"
-            min="1"
-            max="30"
             placeholder="Example: 3"
+            min="1"
+            required
+        >
+
+
+        <label>Budget (₹):</label>
+
+        <input
+            type="number"
+            name="budget"
+            placeholder="Example: 15000"
+            min="1"
             required
         >
 
 
         <button type="submit">
-            🔍 Plan My Trip
+            ✈️ Create Travel Plan
         </button>
 
     </form>
 
-
-    <!-- RESULT -->
 
     {% if result %}
 
@@ -170,87 +168,138 @@
 
         <h2>🌍 Your Travel Plan</h2>
 
-        <p>
-            <strong>From:</strong>
-            {{ result.source }}
-        </p>
 
-        <p>
-            <strong>To:</strong>
-            {{ result.destination }}
-        </p>
+        <div class="box">
 
-        <p>
-            <strong>Days:</strong>
-            {{ result.days }}
-        </p>
-
-
-        <!-- TRANSPORT -->
-
-        <div class="card">
-
-            <h3>🚌 Transport</h3>
+            <h3>📍 Trip Details</h3>
 
             <p>
-                <strong>Type:</strong>
-                {{ result.transport.type }}
+                <b>From:</b> {{ source }}
             </p>
 
             <p>
-                <strong>Price:</strong>
-                ₹{{ result.transport.price }}
+                <b>Destination:</b> {{ destination }}
             </p>
 
             <p>
-                <strong>Duration:</strong>
-                {{ result.transport.duration }}
+                <b>Duration:</b> {{ days }} days
+            </p>
+
+            <p>
+                <b>Budget:</b> ₹{{ budget }}
             </p>
 
         </div>
 
 
-        <!-- HOTEL -->
+        <div class="box">
 
-        <div class="card">
+            <h3>🚌 Transportation</h3>
+
+            <p>
+                <b>Type:</b> {{ transport.type }}
+            </p>
+
+            <p>
+                <b>Duration:</b> {{ transport.duration }}
+            </p>
+
+            <p>
+                <b>Cost:</b> ₹{{ transport_cost }}
+            </p>
+
+        </div>
+
+
+        <div class="box">
 
             <h3>🏨 Hotel</h3>
 
             <p>
-                <strong>Name:</strong>
-                {{ result.hotel.name }}
+                <b>Name:</b> {{ hotel.name }}
             </p>
 
             <p>
-                <strong>Price per night:</strong>
-                ₹{{ result.hotel.price }}
+                <b>Location:</b> {{ hotel.location }}
             </p>
 
             <p>
-                <strong>Rating:</strong>
-                {{ result.hotel.rating }}
+                <b>Price per day:</b>
+                ₹{{ hotel.price_per_day }}
+            </p>
+
+            <p>
+                <b>Total Hotel Cost:</b>
+                ₹{{ hotel_cost }}
             </p>
 
         </div>
 
 
-        <!-- ITINERARY -->
+        <div class="box">
 
-        <div class="card">
+            <h3>☀️ Weather</h3>
 
-            <h3>📅 Itinerary</h3>
+            <p>
+                <b>Condition:</b>
+                {{ weather.condition }}
+            </p>
 
-            <ul>
+            <p>
+                <b>Temperature:</b>
+                {{ weather.temperature }}
+            </p>
 
-                {% for item in result.itinerary %}
+        </div>
 
-                <li>
-                    {{ item }}
-                </li>
 
-                {% endfor %}
+        {% if replanned %}
 
-            </ul>
+        <div class="replan">
+
+            ⚠️ <b>Budget exceeded.</b>
+
+            <br><br>
+
+            The agent automatically
+            <b>re-planned</b> the trip and
+            selected a cheaper hotel.
+
+        </div>
+
+        {% endif %}
+
+
+        <div class="box">
+
+            <p class="total">
+                💰 Total Cost: ₹{{ total_cost }}
+            </p>
+
+        </div>
+
+
+        <div class="box">
+
+            <h3>🤖 Agent Lifecycle</h3>
+
+            <p>✓ Goal understood</p>
+
+            <p>✓ Memory used</p>
+
+            <p>✓ Plan created</p>
+
+            <p>✓ Travel tools used</p>
+
+            <p>✓ Results observed</p>
+
+            <p>✓ Budget reasoned</p>
+
+            {% if replanned %}
+            <p>✓ Agent re-planned</p>
+            {% endif %}
+
+            <p>✓ Travel plan generated</p>
 
         </div>
 

@@ -18,49 +18,91 @@ def search_transport(source, destination):
 def search_hotel(destination):
     return {
         "name": "Beach View Hotel",
-        "price": 2500,
-        "rating": "4.5/5"
+        "price_per_day": 2500,
+        "location": "Near Beach"
     }
 
 
-def create_itinerary(source, destination, days):
-    return [
-        f"Day 1: Travel from {source} to {destination}",
-        f"Day 2: Visit famous places in {destination}",
-        f"Day 3: Enjoy local food and sightseeing in {destination}",
-        f"Day {days}: Return journey"
-    ]
+def check_weather(destination):
+    return {
+        "condition": "Sunny",
+        "temperature": "29°C"
+    }
 
 
 # ==============================
 # HOME PAGE
 # ==============================
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def home():
+    return render_template("index.html")
 
-    result = None
 
-    if request.method == "POST":
+# ==============================
+# PLAN TRIP
+# ==============================
 
-        source = request.form["source"]
-        destination = request.form["destination"]
-        days = int(request.form["days"])
+@app.route("/plan", methods=["POST"])
+def plan_trip():
 
-        transport = search_transport(source, destination)
-        hotel = search_hotel(destination)
-        itinerary = create_itinerary(source, destination, days)
+    source = request.form["source"]
+    destination = request.form["destination"]
+    days = int(request.form["days"])
+    budget = float(request.form["budget"])
 
-        result = {
-            "source": source,
-            "destination": destination,
-            "days": days,
-            "transport": transport,
-            "hotel": hotel,
-            "itinerary": itinerary
-        }
+    # Search transportation
+    transport = search_transport(
+        source,
+        destination
+    )
 
-    return render_template("index.html", result=result)
+    # Search hotel
+    hotel = search_hotel(destination)
+
+    # Check weather
+    weather = check_weather(destination)
+
+    # Calculate costs
+    transport_cost = transport["price"]
+
+    hotel_cost = (
+        hotel["price_per_day"] * days
+    )
+
+    total_cost = transport_cost + hotel_cost
+
+    # Re-planning
+    replanned = False
+
+    if total_cost > budget:
+
+        replanned = True
+
+        hotel["name"] = "Budget Beach Hotel"
+        hotel["price_per_day"] = 1800
+
+        hotel_cost = (
+            hotel["price_per_day"] * days
+        )
+
+        total_cost = transport_cost + hotel_cost
+
+    return render_template(
+        "index.html",
+        result=True,
+        source=source,
+        destination=destination,
+        days=days,
+        budget=budget,
+        transport=transport,
+        hotel=hotel,
+        weather=weather,
+        transport_cost=transport_cost,
+        hotel_cost=hotel_cost,
+        total_cost=total_cost,
+        replanned=replanned
+    )
 
 
 # ==============================
