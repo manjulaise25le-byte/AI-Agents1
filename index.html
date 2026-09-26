@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mini Travel Agent</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #45e0d3;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #1d9531;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #d67d4d;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e6df52;
+            border-radius: 12px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #e164e3;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #9aca7a;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>✈️ Mini Travel Agent</h1>
+
+    <p class="subtitle">
+        Plan your trip with our simple AI Travel Agent
+    </p>
+
+
+    <!-- TRAVEL FORM -->
+
+    <form method="POST">
+
+        <label for="source">Starting Place</label>
+
+        <input
+            type="text"
+            id="source"
+            name="source"
+            placeholder="Example: Bangalore"
+            required
+        >
+
+
+        <label for="destination">Destination</label>
+
+        <input
+            type="text"
+            id="destination"
+            name="destination"
+            placeholder="Example: Goa"
+            required
+        >
+
+
+        <label for="days">Number of Days</label>
+
+        <input
+            type="number"
+            id="days"
+            name="days"
+            min="1"
+            max="30"
+            placeholder="Example: 3"
+            required
+        >
+
+
+        <button type="submit">
+            🔍 Plan My Trip
+        </button>
+
+    </form>
+
+
+    <!-- RESULT -->
+
+    {% if result %}
+
+    <div class="result">
+
+        <h2>🌍 Your Travel Plan</h2>
+
+        <p>
+            <strong>From:</strong>
+            {{ result.source }}
+        </p>
+
+        <p>
+            <strong>To:</strong>
+            {{ result.destination }}
+        </p>
+
+        <p>
+            <strong>Days:</strong>
+            {{ result.days }}
+        </p>
+
+
+        <!-- TRANSPORT -->
+
+        <div class="card">
+
+            <h3>🚌 Transport</h3>
+
+            <p>
+                <strong>Type:</strong>
+                {{ result.transport.type }}
+            </p>
+
+            <p>
+                <strong>Price:</strong>
+                ₹{{ result.transport.price }}
+            </p>
+
+            <p>
+                <strong>Duration:</strong>
+                {{ result.transport.duration }}
+            </p>
+
+        </div>
+
+
+        <!-- HOTEL -->
+
+        <div class="card">
+
+            <h3>🏨 Hotel</h3>
+
+            <p>
+                <strong>Name:</strong>
+                {{ result.hotel.name }}
+            </p>
+
+            <p>
+                <strong>Price per night:</strong>
+                ₹{{ result.hotel.price }}
+            </p>
+
+            <p>
+                <strong>Rating:</strong>
+                {{ result.hotel.rating }}
+            </p>
+
+        </div>
+
+
+        <!-- ITINERARY -->
+
+        <div class="card">
+
+            <h3>📅 Itinerary</h3>
+
+            <ul>
+
+                {% for item in result.itinerary %}
+
+                <li>
+                    {{ item }}
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
